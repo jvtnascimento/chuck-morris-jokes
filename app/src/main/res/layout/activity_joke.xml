@@ -7,5 +7,67 @@
         android:background="@color/background"
         tools:context=".activities.JokeActivity">
 
+    <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"/>
+    <LinearLayout
+            android:visibility="gone"
+            android:orientation="vertical"
+            android:id="@+id/mainContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="16dp">
+
+        <ImageView
+                android:id="@+id/jokeIcon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@mipmap/ic_launcher"
+                android:layout_margin="8dp"
+                android:layout_gravity="center"/>
+
+        <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="@string/jokeError"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:textSize="20sp"
+                android:id="@+id/jokeValue"/>
+
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="36dp">
+
+            <Button
+                    android:id="@+id/nextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Next"
+                    android:layout_marginEnd="8dp"
+                    android:textColor="@color/black"
+                    android:textAllCaps="false"/>
+
+            <Button
+                    android:id="@+id/linkButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="See on site"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/black"
+                    android:textAllCaps="false"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
 
 </RelativeLayout>

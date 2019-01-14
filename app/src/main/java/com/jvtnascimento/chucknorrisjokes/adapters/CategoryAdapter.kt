@@ -1,39 +1,37 @@
 package com.jvtnascimento.chucknorrisjokes.adapters
 
 import android.content.Context
+import android.content.Intent
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.TextView
 import com.jvtnascimento.chucknorrisjokes.R
+import com.jvtnascimento.chucknorrisjokes.activities.JokeActivity
+import kotlinx.android.synthetic.main.item_category.view.*
 
-class CategoryAdapter(
-    context: Context,
-    private val dataSource: ArrayList<String>) : BaseAdapter(){
-
-    private val inflater: LayoutInflater
-            = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-
-    override fun getCount(): Int {
-        return dataSource.size
+class CategoryAdapter(val items : ArrayList<String>, val context: Context) : RecyclerView.Adapter<ViewHolder>() {
+    override fun getItemCount(): Int {
+        return items.size
     }
 
-    override fun getItem(position: Int): Any {
-        return dataSource[position]
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_category, parent, false))
     }
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val category = items[position]
+
+        holder.itemName.text = category.capitalize()
+
+        holder.itemView.setOnClickListener {
+            val intent = Intent( context, JokeActivity::class.java)
+            intent.putExtra("category", category)
+            context.startActivity(intent)
+        }
     }
+}
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val view = inflater.inflate(R.layout.item_category, parent, false)
-        val itemName = view.findViewById(R.id.itemName) as TextView
-
-        val category = getItem(position) as String
-        itemName.text = category
-
-        return view
-    }
+class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
+    val itemName = view.itemName!!
 }
