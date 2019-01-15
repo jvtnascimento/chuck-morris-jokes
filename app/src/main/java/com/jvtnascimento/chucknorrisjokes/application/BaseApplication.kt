@@ -1,16 +1,24 @@
 package com.jvtnascimento.chucknorrisjokes.application
 
 import android.app.Application
-import com.jvtnascimento.chucknorrisjokes.services.APISettings
 
 class BaseApplication: Application() {
+
+    companion object {
+        lateinit var instance: BaseApplication
+    }
+
     override fun onCreate() {
         super.onCreate()
 
-        this.configureAPISettings()
+        instance = this
+        this.setup()
     }
 
-    private fun configureAPISettings() {
-        APISettings.instance =  APISettings("https", "api.chucknorris.io", 0)
+    fun setup() {
+//        component = DaggerApplicationComponent.builder()
+//            .applicationModule(ApplicationModule(this)).build()
+//        component.inject(this)
     }
+
 }

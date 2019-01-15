@@ -1,4 +1,4 @@
-package com.jvtnascimento.chucknorrisjokes.activities
+package com.jvtnascimento.chucknorrisjokes.view
 
 import android.content.Intent
 import android.net.Uri
@@ -8,13 +8,11 @@ import android.view.View
 import android.widget.*
 import com.jvtnascimento.chucknorrisjokes.R
 import com.jvtnascimento.chucknorrisjokes.models.Joke
+import com.jvtnascimento.chucknorrisjokes.presenter.JokePresenter
 import com.jvtnascimento.chucknorrisjokes.services.modules.GlideApp
-import com.jvtnascimento.chucknorrisjokes.services.retrofit.JokeService
-import com.jvtnascimento.chucknorrisjokes.services.retrofit.client.RetrofitClient
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.jvtnascimento.chucknorrisjokes.view.contracts.ViewContractInterface
 
-class JokeActivity : AppCompatActivity() {
+class JokeActivity : AppCompatActivity(), ViewContractInterface {
 
     private lateinit var mainContent: LinearLayout
     private lateinit var progressBar: ProgressBar
@@ -26,9 +24,13 @@ class JokeActivity : AppCompatActivity() {
     private var category: String = ""
     private var joke: Joke? = null
 
+    private var presenter: JokePresenter? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_joke)
+
+        this.presenter = JokePresenter(this)
 
         if (intent.hasExtra("category"))
             category = intent.getStringExtra("category")
@@ -42,22 +44,20 @@ class JokeActivity : AppCompatActivity() {
         return true
     }
 
+    override fun showError(error: Throwable) {
+        this.hideProgressBar()
+    }
+
+    override fun showJoke(joke: Joke) {
+        this.joke = joke
+        this.hideProgressBar()
+        this.configureView()
+    }
+
     private fun loadData() {
         if (this.category != "") {
             this.showProgressBar()
-            RetrofitClient
-                .createService(JokeService::class.java)
-                .getJoke(this.category)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ result ->
-                    this.joke = result
-                    this.hideProgressBar()
-                    this.configureView()
-                }, { e ->
-                    e.printStackTrace()
-                    this.hideProgressBar()
-                })
+            this.presenter!!.getJoke(this.category)
         } else {
             this.hideProgressBar()
         }

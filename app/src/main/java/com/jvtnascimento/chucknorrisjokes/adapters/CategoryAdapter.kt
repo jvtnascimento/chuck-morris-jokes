@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jvtnascimento.chucknorrisjokes.R
-import com.jvtnascimento.chucknorrisjokes.activities.JokeActivity
+import com.jvtnascimento.chucknorrisjokes.view.JokeActivity
 import kotlinx.android.synthetic.main.item_category.view.*
 
 class CategoryAdapter(val items : ArrayList<String>, val context: Context) : RecyclerView.Adapter<ViewHolder>() {

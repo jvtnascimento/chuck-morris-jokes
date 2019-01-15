@@ -1,4 +1,4 @@
-package com.jvtnascimento.chucknorrisjokes.activities
+package com.jvtnascimento.chucknorrisjokes.view
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -9,12 +9,12 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import com.jvtnascimento.chucknorrisjokes.R
 import com.jvtnascimento.chucknorrisjokes.adapters.CategoryAdapter
-import com.jvtnascimento.chucknorrisjokes.services.retrofit.JokeService
-import com.jvtnascimento.chucknorrisjokes.services.retrofit.client.RetrofitClient
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.jvtnascimento.chucknorrisjokes.presenter.JokePresenter
+import com.jvtnascimento.chucknorrisjokes.view.contracts.ViewContractInterface
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ViewContractInterface {
+
+    private var presenter: JokePresenter? = null
 
     private lateinit var categoryList: RecyclerView
     private lateinit var progressBar: ProgressBar
@@ -25,27 +25,27 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        this.presenter = JokePresenter(this)
+
         this.configureComponents()
         this.loadData()
     }
 
+    override fun showCategories(categories: ArrayList<String>) {
+        this.categories = categories
+        configureView()
+    }
+
+    override fun showError(error: Throwable) {
+        Toast.makeText(
+            this,
+            "It wasn't possible to get joke categories =(",
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
     private fun loadData() {
-        RetrofitClient
-            .createService(JokeService::class.java)
-            .getCategories()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ result ->
-                this.categories = result
-                configureView()
-            }, { e ->
-                e.printStackTrace()
-                Toast.makeText(
-                    this,
-                    "It wasn't possible to get joke categories =(",
-                    Toast.LENGTH_SHORT
-                ).show()
-            })
+        presenter!!.getCategories()
     }
 
     private fun configureComponents() {
