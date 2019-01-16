@@ -7,9 +7,13 @@ import com.jvtnascimento.chucknorrisjokes.view.contracts.ViewContractInterface
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class JokePresenter(_view: ViewContractInterface): PresenterContractInterface {
+class JokePresenter: PresenterContractInterface {
 
-    private var view: ViewContractInterface = _view
+    private lateinit var view: ViewContractInterface
+
+    override fun attach(view: ViewContractInterface) {
+        this.view = view
+    }
 
     override fun getCategories() {
         ApiServiceInterface

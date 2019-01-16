@@ -1,24 +1,23 @@
 package com.jvtnascimento.chucknorrisjokes.application
 
 import android.app.Application
+import com.jvtnascimento.chucknorrisjokes.dagger.AppComponent
+import com.jvtnascimento.chucknorrisjokes.dagger.DaggerAppComponent
+import com.jvtnascimento.chucknorrisjokes.dagger.JokePresenterModule
 
 class BaseApplication: Application() {
 
-    companion object {
-        lateinit var instance: BaseApplication
-    }
+    lateinit var component: AppComponent
 
     override fun onCreate() {
         super.onCreate()
 
-        instance = this
-        this.setup()
+        this.configureDaggerComponent()
     }
 
-    fun setup() {
-//        component = DaggerApplicationComponent.builder()
-//            .applicationModule(ApplicationModule(this)).build()
-//        component.inject(this)
+    private fun configureDaggerComponent() {
+        component = DaggerAppComponent.builder()
+            .jokePresenterModule(JokePresenterModule())
+            .build()
     }
-
 }

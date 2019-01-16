@@ -10,6 +10,7 @@ import retrofit2.http.Query
 import java.util.ArrayList
 
 interface ApiServiceInterface {
+
     @GET("jokes/categories")
     fun getCategories(): Observable<ArrayList<String>>
 

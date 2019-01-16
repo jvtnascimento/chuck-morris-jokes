@@ -6,34 +6,39 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import butterknife.BindView
+import butterknife.ButterKnife
 import com.jvtnascimento.chucknorrisjokes.R
+import com.jvtnascimento.chucknorrisjokes.application.BaseApplication
 import com.jvtnascimento.chucknorrisjokes.models.Joke
 import com.jvtnascimento.chucknorrisjokes.presenter.JokePresenter
 import com.jvtnascimento.chucknorrisjokes.services.modules.GlideApp
 import com.jvtnascimento.chucknorrisjokes.view.contracts.ViewContractInterface
+import javax.inject.Inject
 
 class JokeActivity : AppCompatActivity(), ViewContractInterface {
 
-    private lateinit var mainContent: LinearLayout
-    private lateinit var progressBar: ProgressBar
-    private lateinit var jokeIcon: ImageView
-    private lateinit var jokeValue: TextView
-    private lateinit var nextButton: Button
-    private lateinit var linkButton: Button
+    @BindView(R.id.mainContent) lateinit var mainContent: LinearLayout
+    @BindView(R.id.progressBar) lateinit var progressBar: ProgressBar
+    @BindView(R.id.jokeIcon) lateinit var jokeIcon: ImageView
+    @BindView(R.id.jokeValue) lateinit var jokeValue: TextView
+    @BindView(R.id.nextButton) lateinit var nextButton: Button
+    @BindView(R.id.linkButton) lateinit var linkButton: Button
 
     private var category: String = ""
     private var joke: Joke? = null
 
-    private var presenter: JokePresenter? = null
+    @Inject
+    lateinit var presenter: JokePresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_joke)
 
-        this.presenter = JokePresenter(this)
+        ButterKnife.bind(this)
 
-        if (intent.hasExtra("category"))
-            category = intent.getStringExtra("category")
+        if (this.intent.hasExtra("category"))
+            this.category = this.intent.getStringExtra("category")
 
         this.configureComponents()
         this.loadData()
@@ -57,7 +62,7 @@ class JokeActivity : AppCompatActivity(), ViewContractInterface {
     private fun loadData() {
         if (this.category != "") {
             this.showProgressBar()
-            this.presenter!!.getJoke(this.category)
+            this.presenter.getJoke(this.category)
         } else {
             this.hideProgressBar()
         }
@@ -68,12 +73,8 @@ class JokeActivity : AppCompatActivity(), ViewContractInterface {
         (this as AppCompatActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         (this as AppCompatActivity).supportActionBar!!.setDisplayShowHomeEnabled(true)
 
-        this.progressBar = findViewById(R.id.progressBar)
-        this.mainContent = findViewById(R.id.mainContent)
-        this.jokeIcon = findViewById(R.id.jokeIcon)
-        this.jokeValue = findViewById(R.id.jokeValue)
-        this.nextButton = findViewById(R.id.nextButton)
-        this.linkButton = findViewById(R.id.linkButton)
+        (application as BaseApplication).component.inject(this);
+        this.presenter.attach(this)
 
         this.nextButton.setOnClickListener {
             this.loadData()

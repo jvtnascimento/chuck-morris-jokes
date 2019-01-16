@@ -7,17 +7,21 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
+import butterknife.BindView
+import butterknife.ButterKnife
 import com.jvtnascimento.chucknorrisjokes.R
 import com.jvtnascimento.chucknorrisjokes.adapters.CategoryAdapter
+import com.jvtnascimento.chucknorrisjokes.application.BaseApplication
 import com.jvtnascimento.chucknorrisjokes.presenter.JokePresenter
 import com.jvtnascimento.chucknorrisjokes.view.contracts.ViewContractInterface
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), ViewContractInterface {
 
-    private var presenter: JokePresenter? = null
+    @BindView(R.id.categoryList) lateinit var categoryList: RecyclerView
+    @BindView(R.id.progressBar) lateinit var progressBar: ProgressBar
 
-    private lateinit var categoryList: RecyclerView
-    private lateinit var progressBar: ProgressBar
+    @Inject lateinit var presenter: JokePresenter
 
     private var categories: ArrayList<String> = ArrayList()
 
@@ -25,7 +29,7 @@ class MainActivity : AppCompatActivity(), ViewContractInterface {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        this.presenter = JokePresenter(this)
+        ButterKnife.bind(this)
 
         this.configureComponents()
         this.loadData()
@@ -33,7 +37,7 @@ class MainActivity : AppCompatActivity(), ViewContractInterface {
 
     override fun showCategories(categories: ArrayList<String>) {
         this.categories = categories
-        configureView()
+        this.configureView()
     }
 
     override fun showError(error: Throwable) {
@@ -45,13 +49,14 @@ class MainActivity : AppCompatActivity(), ViewContractInterface {
     }
 
     private fun loadData() {
-        presenter!!.getCategories()
+        this.presenter.getCategories()
     }
 
     private fun configureComponents() {
         (this as AppCompatActivity).supportActionBar!!.title = "Categories"
-        this.categoryList = findViewById(R.id.categoryList)
-        this.progressBar = findViewById(R.id.progressBar)
+
+        (application as BaseApplication).component.inject(this)
+        this.presenter.attach(this)
     }
 
     private fun configureView() {
@@ -59,7 +64,7 @@ class MainActivity : AppCompatActivity(), ViewContractInterface {
         this.categoryList.visibility = View.VISIBLE
 
         this.categoryList.layoutManager = LinearLayoutManager(this)
-        val adapter = CategoryAdapter(this.categories, this)
-        this.categoryList.adapter = adapter
+        this.categoryList.adapter = CategoryAdapter(this.categories, this)
     }
+
 }
