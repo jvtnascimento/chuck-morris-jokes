@@ -7,4 +7,6 @@ interface ViewContractInterface {
     fun showCategories(categories: ArrayList<String>) {}
     fun showJoke(joke: Joke) {}
     fun showError(error: Throwable)
+    fun showProgressBar()
+    fun hideProgressBar()
 }

@@ -25,11 +25,10 @@ class JokeActivity : AppCompatActivity(), ViewContractInterface {
     @BindView(R.id.nextButton) lateinit var nextButton: Button
     @BindView(R.id.linkButton) lateinit var linkButton: Button
 
+    @Inject lateinit var presenter: JokePresenter
+
     private var category: String = ""
     private var joke: Joke? = null
-
-    @Inject
-    lateinit var presenter: JokePresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +49,7 @@ class JokeActivity : AppCompatActivity(), ViewContractInterface {
     }
 
     override fun showError(error: Throwable) {
-        this.hideProgressBar()
+        Toaster.showMessage("We couldn't get the joke =(", this)
     }
 
     override fun showJoke(joke: Joke) {
@@ -59,9 +58,18 @@ class JokeActivity : AppCompatActivity(), ViewContractInterface {
         this.configureView()
     }
 
+    override fun showProgressBar() {
+        this.mainContent.visibility = View.GONE
+        this.progressBar.visibility = View.VISIBLE
+    }
+
+    override fun hideProgressBar() {
+        this.progressBar.visibility = View.GONE
+        this.mainContent.visibility = View.VISIBLE
+    }
+
     private fun loadData() {
         if (this.category != "") {
-            this.showProgressBar()
             this.presenter.getJoke(this.category)
         } else {
             this.hideProgressBar()
@@ -96,16 +104,6 @@ class JokeActivity : AppCompatActivity(), ViewContractInterface {
         }
     }
 
-    private fun showProgressBar() {
-        this.mainContent.visibility = View.GONE
-        this.progressBar.visibility = View.VISIBLE
-    }
-
-    private fun hideProgressBar() {
-        this.progressBar.visibility = View.GONE
-        this.mainContent.visibility = View.VISIBLE
-    }
-
     private fun onLinkButtonTap(joke: Joke?) {
         if (joke != null) {
             val bundle = Bundle()
@@ -115,11 +113,7 @@ class JokeActivity : AppCompatActivity(), ViewContractInterface {
             intent.putExtras(bundle)
             startActivity(intent)
         } else {
-            Toast.makeText(
-                this,
-                "It wasn't possible to get a joke =(",
-                Toast.LENGTH_SHORT
-            ).show()
+            Toaster.showMessage("We couldn't get the joke =(", this)
         }
     }
 }

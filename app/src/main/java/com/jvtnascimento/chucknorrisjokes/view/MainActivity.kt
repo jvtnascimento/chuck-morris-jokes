@@ -1,7 +1,9 @@
 package com.jvtnascimento.chucknorrisjokes.view
 
+import android.content.DialogInterface
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -14,6 +16,7 @@ import com.jvtnascimento.chucknorrisjokes.adapters.CategoryAdapter
 import com.jvtnascimento.chucknorrisjokes.application.BaseApplication
 import com.jvtnascimento.chucknorrisjokes.presenter.JokePresenter
 import com.jvtnascimento.chucknorrisjokes.view.contracts.ViewContractInterface
+import java.net.ConnectException
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), ViewContractInterface {
@@ -41,11 +44,24 @@ class MainActivity : AppCompatActivity(), ViewContractInterface {
     }
 
     override fun showError(error: Throwable) {
-        Toast.makeText(
-            this,
-            "It wasn't possible to get joke categories =(",
-            Toast.LENGTH_SHORT
-        ).show()
+        AlertDialog.Builder(this)
+            .setTitle("Oops...")
+            .setMessage("We couldn't get the joke categories =(")
+            .setCancelable(false)
+            .setPositiveButton("Try again"){ _, _ ->
+                   this.loadData()
+            }
+            .show()
+    }
+
+    override fun showProgressBar() {
+        this.progressBar.visibility = View.VISIBLE
+        this.categoryList.visibility = View.GONE
+    }
+
+    override fun hideProgressBar() {
+        this.progressBar.visibility = View.GONE
+        this.categoryList.visibility = View.VISIBLE
     }
 
     private fun loadData() {
@@ -60,9 +76,6 @@ class MainActivity : AppCompatActivity(), ViewContractInterface {
     }
 
     private fun configureView() {
-        this.progressBar.visibility = View.GONE
-        this.categoryList.visibility = View.VISIBLE
-
         this.categoryList.layoutManager = LinearLayoutManager(this)
         this.categoryList.adapter = CategoryAdapter(this.categories, this)
     }

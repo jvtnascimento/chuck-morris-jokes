@@ -9,36 +9,42 @@ import io.reactivex.schedulers.Schedulers
 
 class JokePresenter: PresenterContractInterface {
 
-    private lateinit var view: ViewContractInterface
+    lateinit var view: ViewContractInterface
 
     override fun attach(view: ViewContractInterface) {
         this.view = view
     }
 
     override fun getCategories() {
+        this.view.showProgressBar()
         ApiServiceInterface
             .create()
             .getCategories()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ list: ArrayList<String> ->
+                this.view.hideProgressBar()
                 this.view.showCategories(list)
             }, { error ->
                 error.printStackTrace()
+                this.view.hideProgressBar()
                 this.view.showError(error)
             })
     }
 
     override fun getJoke(category: String) {
+        this.view.showProgressBar()
         ApiServiceInterface
             .create()
             .getJoke(category)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ result: Joke ->
+                this.view.hideProgressBar()
                 this.view.showJoke(result)
             }, { error ->
                 error.printStackTrace()
+                this.view.hideProgressBar()
                 this.view.showError(error)
             })
     }

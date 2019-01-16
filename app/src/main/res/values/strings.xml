@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">CN Jokes</string>
     <string name="loading">carregando...</string>
-    <string name="jokeError">It wasn\'t possible to get a joke =(</string>
+    <string name="jokeError">We couldn\'t get the joke =(</string>
     <string name="nextButton">Next</string>
     <string name="linkButton">Go to site</string>
 </resources>

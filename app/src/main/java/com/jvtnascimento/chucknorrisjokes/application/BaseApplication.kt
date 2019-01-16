@@ -16,7 +16,7 @@ class BaseApplication: Application() {
     }
 
     private fun configureDaggerComponent() {
-        component = DaggerAppComponent.builder()
+        this.component = DaggerAppComponent.builder()
             .jokePresenterModule(JokePresenterModule())
             .build()
     }
