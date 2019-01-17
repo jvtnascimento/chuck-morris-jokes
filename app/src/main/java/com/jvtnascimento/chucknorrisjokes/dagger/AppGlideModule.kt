@@ -1,4 +1,4 @@
-package com.jvtnascimento.chucknorrisjokes.services.modules
+package com.jvtnascimento.chucknorrisjokes.dagger
 
 import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.module.AppGlideModule

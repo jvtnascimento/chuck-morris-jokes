@@ -10,7 +10,7 @@ import com.jvtnascimento.chucknorrisjokes.R
 import com.jvtnascimento.chucknorrisjokes.view.JokeActivity
 import kotlinx.android.synthetic.main.item_category.view.*
 
-class CategoryAdapter(private val items : ArrayList<String>, val context: Context) : RecyclerView.Adapter<ViewHolder>() {
+class CategoryAdapter(private val items : ArrayList<String>, val context: Context) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
     override fun getItemCount(): Int {
         return items.size
     }
@@ -30,8 +30,8 @@ class CategoryAdapter(private val items : ArrayList<String>, val context: Contex
             context.startActivity(intent)
         }
     }
-}
 
-class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
-    val itemName = view.itemName!!
+    class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
+        val itemName = view.itemName!!
+    }
 }

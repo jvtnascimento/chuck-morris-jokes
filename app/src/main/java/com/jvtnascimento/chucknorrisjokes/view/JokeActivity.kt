@@ -10,9 +10,9 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import com.jvtnascimento.chucknorrisjokes.R
 import com.jvtnascimento.chucknorrisjokes.application.BaseApplication
+import com.jvtnascimento.chucknorrisjokes.dagger.GlideApp
 import com.jvtnascimento.chucknorrisjokes.models.Joke
 import com.jvtnascimento.chucknorrisjokes.presenter.JokePresenter
-import com.jvtnascimento.chucknorrisjokes.services.modules.GlideApp
 import com.jvtnascimento.chucknorrisjokes.view.contracts.ViewContractInterface
 import javax.inject.Inject
 
@@ -49,7 +49,7 @@ class JokeActivity : AppCompatActivity(), ViewContractInterface {
     }
 
     override fun showError(error: Throwable) {
-        Toaster.showMessage("We couldn't get the joke =(", this)
+        Toast.makeText(this, "We couldn't get the joke =(", Toast.LENGTH_LONG).show()
     }
 
     override fun showJoke(joke: Joke) {
@@ -113,7 +113,7 @@ class JokeActivity : AppCompatActivity(), ViewContractInterface {
             intent.putExtras(bundle)
             startActivity(intent)
         } else {
-            Toaster.showMessage("We couldn't get the joke =(", this)
+            Toast.makeText(this, "We couldn't get the joke =(", Toast.LENGTH_LONG).show()
         }
     }
 }
